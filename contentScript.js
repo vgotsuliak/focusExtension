@@ -1,7 +1,5 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    chrome.storage.sync.get('words', ({words}) => {
-        processDom(request.selectors, words);
-    });
+    processDom(request.selectors, request.words);
 });
 
 chrome.storage.sync.get('selectors', ({selectors}) => {
@@ -19,7 +17,7 @@ function processDom(selectors, words) {
         while (element) {
             let count = 0;
             words.forEach((word) => {
-                if (element.textContent.indexOf(word) >= 0) {
+                if (word && word.length > 0 && element.textContent.toLowerCase().indexOf(word.toLowerCase()) >= 0) {
                     count++;
                 }
             });

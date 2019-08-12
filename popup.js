@@ -12,19 +12,15 @@ chrome.storage.sync.get('words', ({words}) => {
     }
 });
 
-
-document.getElementById('selectors').onchange = function (event) {
-    const text = event.target.value;
-    const selectors = text.split('\n');
-    chrome.storage.sync.set({selectors});
+document.getElementById('saveButton').onclick = function (event) {
     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {selectors});
+        const selectorsText = document.getElementById('selectors').value;
+        const wordsText = document.getElementById('words').value;
+        const selectors = selectorsText.split('\n');
+        const words = wordsText.split('\n');
+        chrome.storage.sync.set({words});
+        chrome.storage.sync.set({selectors});
+        chrome.tabs.sendMessage(tabs[0].id, {selectors, words});
     });
-};
-
-document.getElementById('words').onchange = function (event) {
-    const text = event.target.value;
-    const words = text.split('\n');
-    chrome.storage.sync.set({words});
 };
 
